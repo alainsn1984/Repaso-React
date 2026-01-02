@@ -19,19 +19,22 @@ export const useGifs = () => {
 
         const gifs = await getGifByQuery(term)
         setGifsResponse(gifs)
+        gifsCache.current[term] = gifs
 
     }
     
     const handleSearch = async(query: string) => {
-        if ( !query || query.trim().length === 0){
+
+        query = query.trim().toLowerCase()
+
+        if ( query.trim().length === 0){
             return
         }
-        console.log(query)
-        const queryLowerCase = query.toLowerCase()
         
-        if(previousTerms.includes(queryLowerCase) ) return;
+        
+        if(previousTerms.includes(query) ) return;
             
-        setPreviousTerms(state => [queryLowerCase, ...state].slice(0, 8))
+        setPreviousTerms(state => [query, ...state].slice(0, 8))
 
         const gifs = await getGifByQuery(query)
         setGifsResponse(gifs)
